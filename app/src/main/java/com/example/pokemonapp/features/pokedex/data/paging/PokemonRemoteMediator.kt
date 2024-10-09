@@ -53,18 +53,18 @@ class PokemonRemoteMediator(
                 }
             }
 
-            val response = pokemonApi.getPokemonList(page = currentPage, perPage = ITEMS_PER_PAGE).results
-            val endOfPaginationReached = response.isEmpty()
+            val response = pokemonApi.getPokemonList(page = currentPage, perPage = ITEMS_PER_PAGE).body()?.results
+            val endOfPaginationReached = response?.isEmpty()?: true
 
             val pokemonListItemEntities = coroutineScope {
-                response.map { pokemonListItem ->
+                response?.map { pokemonListItem ->
                     async {
                         val id = PokemonListItem.getIdFromUrl(pokemonListItem.url)
-                        val pokemonDetail = pokemonApi.getPokemonDetail(id)
-                        val pokemonSpecies = pokemonApi.getPokemonSpecies(id)
+                        val pokemonDetail = async {pokemonApi.getPokemonDetail(id)}.await().body()!!
+                        val pokemonSpecies = async{pokemonApi.getPokemonSpecies(id)}.await().body()!!
                         PokemonListItemEntity.pokemonListItemEntityMapper(pokemonDetail, pokemonSpecies)
                     }
-                }.awaitAll()
+                }?.awaitAll() ?: emptyList()
             }
 
             val prevPage = if (currentPage == 1) null else currentPage - 1

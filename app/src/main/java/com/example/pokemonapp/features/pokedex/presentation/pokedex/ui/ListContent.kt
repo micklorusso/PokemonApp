@@ -1,8 +1,7 @@
-package com.example.pokemonapp.features.pokedex.presentation
+package com.example.pokemonapp.features.pokedex.presentation.pokedex.ui
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -17,24 +16,21 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.capitalize
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.paging.compose.LazyPagingItems
 import coil.compose.AsyncImage
 import com.example.pokemonapp.features.pokedex.domain.entities.PokemonListItemEntity
+import com.example.pokemonapp.features.pokedex.presentation.common.TypeBadge
+import com.example.pokemonapp.util.UtilityFunctions
 import java.util.Locale
 
 @Composable
-fun ListContent(pokemonListItemEntities: LazyPagingItems<PokemonListItemEntity>, modifier: Modifier) {
+fun ListContent(pokemonListItemEntities: LazyPagingItems<PokemonListItemEntity>, modifier: Modifier,
+                onItemClick: (Int, String) -> Unit) {
 
     LazyVerticalGrid(
         modifier = modifier.fillMaxSize(),
@@ -48,17 +44,22 @@ fun ListContent(pokemonListItemEntities: LazyPagingItems<PokemonListItemEntity>,
                 modifier = Modifier.padding(12.dp))
         }
         items(pokemonListItemEntities.itemCount) { index ->
-            pokemonListItemEntities[index]?.let { PokemonItem(pokemon = it) }
+            pokemonListItemEntities[index]?.let { pokemon ->
+                PokemonItem(
+                    pokemon = pokemon,
+                    modifier = Modifier.clickable {onItemClick(pokemon.id, pokemon.color) }
+                )
+            }
         }
     }
 }
 
 
 @Composable
-fun PokemonItem(pokemon: PokemonListItemEntity) {
-    val pokemonColor = Color(android.graphics.Color.parseColor(pokemon.color))
-    val textColor = if (pokemonColor.luminance() > 0.5f) Color.Black else Color.White
-    Card(modifier = Modifier
+fun PokemonItem(pokemon: PokemonListItemEntity, modifier: Modifier) {
+    val pokemonColor = UtilityFunctions.hexToColor(pokemon.color)
+    val textColor = UtilityFunctions.getTextColor(pokemonColor)
+    Card(modifier = modifier
         .size(128.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 12.dp),
         shape = RoundedCornerShape(20.dp),
@@ -73,30 +74,10 @@ fun PokemonItem(pokemon: PokemonListItemEntity) {
                 modifier = Modifier.padding(start = 20.dp, top = 6.dp))
             Row {
                 Column { pokemon.types.forEach{ type ->
-                    TypeBadge(type, textColor)
+                    TypeBadge(modifier = Modifier.padding(horizontal = 20.dp, vertical = 6.dp),type, textColor)
                 } }
                 AsyncImage(model = pokemon.imageUrl, modifier = Modifier.weight(1f), contentDescription = "${pokemon.name} image")
             }
         }
-    }
-}
-
-@Composable
-fun TypeBadge(type: String, textColor: Color) {
-    Box(
-        modifier = Modifier
-            .padding(horizontal = 20.dp, vertical = 6.dp)
-            .background(
-                color = textColor.copy(alpha = 0.2f),
-                shape = RoundedCornerShape(50) // Fully rounded corners
-            )
-            .padding(horizontal = 12.dp, vertical = 4.dp)
-    ) {
-        Text(
-            text = type,
-            color = textColor,
-            fontSize = 12.sp,
-            textAlign = TextAlign.Center
-        )
     }
 }

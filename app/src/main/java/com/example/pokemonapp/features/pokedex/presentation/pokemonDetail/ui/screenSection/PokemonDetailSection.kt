@@ -25,37 +25,37 @@ import com.example.pokemonapp.features.pokedex.presentation.pokemonDetail.ui.det
 fun PokemonDetailSection(modifier: Modifier, pokemonDetail: PokemonDetailEntity) {
     var selectedTab by remember { mutableIntStateOf(0) }
     val tabTitles = listOf("About", "Base Stats", "Evolution", "Moves")
-        Box(
-            modifier = modifier) {
-            Column {
-                TabRow(
-                    selectedTabIndex = selectedTab,
-                    containerColor = Color.White,
-                    contentColor = Color.Black,
-                    indicator = { tabPositions ->
-                        val selectedTabPosition = tabPositions[selectedTab]
-                        Box(
-                            modifier = Modifier
-                                .tabIndicatorOffset(selectedTabPosition)
-                                .background(Color.Blue, shape = RectangleShape)
-                                .height(2.dp)
-                        )
-                    }
-                ) {
-                    tabTitles.forEachIndexed { index, title ->
-                        Tab(
-                            text = { Text(title) },
-                            selected = selectedTab == index,
-                            onClick = { selectedTab = index }
-                        )
-                    }
+    Box(
+        modifier = modifier) {
+        Column {
+            TabRow(
+                selectedTabIndex = selectedTab,
+                containerColor = Color.White,
+                contentColor = Color.Black,
+                indicator = { tabPositions ->
+                    val selectedTabPosition = tabPositions[selectedTab]
+                    Box(
+                        modifier = Modifier
+                            .tabIndicatorOffset(selectedTabPosition)
+                            .background(Color.Blue, shape = RectangleShape)
+                            .height(2.dp)
+                    )
                 }
-                when (selectedTab) {
-                    0 -> AboutCard(pokemonDetail)
-                    1 -> BaseStatsCard(pokemonDetail)
-                    2 -> Unit
-                    3 -> Unit
+            ) {
+                tabTitles.forEachIndexed { index, title ->
+                    Tab(
+                        text = { Text(title) },
+                        selected = selectedTab == index,
+                        onClick = { selectedTab = index }
+                    )
                 }
             }
-    }
+            when (selectedTab) {
+                0 -> AboutCard(pokemonDetail)
+                1 -> BaseStatsCard(pokemonDetail)
+                2 -> Unit
+                3 -> Unit
+            }
+        }
+}
 }

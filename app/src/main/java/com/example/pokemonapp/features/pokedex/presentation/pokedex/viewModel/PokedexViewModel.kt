@@ -3,6 +3,8 @@ package com.example.pokemonapp.features.pokedex.presentation.pokedex.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.ExperimentalPagingApi
+import com.example.pokemonapp.features.auth.domain.AccountService
+import com.example.pokemonapp.features.auth.domain.FirebaseService
 import com.example.pokemonapp.features.pokedex.domain.repositories.PokemonRepository
 import com.example.pokemonapp.navigation.Screen
 import com.example.pokemonapp.util.UiSingleTimeEvent
@@ -15,7 +17,8 @@ import javax.inject.Inject
 @ExperimentalPagingApi
 @HiltViewModel
 class PokedexViewModel @Inject constructor(
-    repository: PokemonRepository
+    repository: PokemonRepository,
+    val firebaseService: FirebaseService
 ): ViewModel() {
     val pokedex = repository.getPokedex()
 
@@ -25,7 +28,17 @@ class PokedexViewModel @Inject constructor(
     fun onEvent(event: PokedexEvent){
         when(event){
             is PokedexEvent.OnPokemonClick -> {
-                emitUiSingleTimeEvent(UiSingleTimeEvent.Navigate("${Screen.PokemonDetailScreen.route}/${event.id}&${event.color}"), viewModelScope, _uiSingleTimeEvent)
+                emitUiSingleTimeEvent(UiSingleTimeEvent.Navigate("${Screen.PokemonDetailScreen.route}/${event.id}"), viewModelScope, _uiSingleTimeEvent)
+            }
+            is PokedexEvent.OnProfileClick -> {
+                emitUiSingleTimeEvent(UiSingleTimeEvent.Navigate(Screen.AccountCenterScreen.route), viewModelScope, _uiSingleTimeEvent)
+            }
+            is PokedexEvent.OnSettingsClick -> {
+
+            }
+
+            PokedexEvent.OnFavouritesClick -> {
+                emitUiSingleTimeEvent(UiSingleTimeEvent.Navigate(Screen.FavouriteScreen.route), viewModelScope, _uiSingleTimeEvent)
             }
         }
     }

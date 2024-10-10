@@ -30,7 +30,7 @@ import java.util.Locale
 
 @Composable
 fun ListContent(pokemonListItemEntities: LazyPagingItems<PokemonListItemEntity>, modifier: Modifier,
-                onItemClick: (Int, String) -> Unit) {
+                onItemClick: (Int) -> Unit) {
 
     LazyVerticalGrid(
         modifier = modifier.fillMaxSize(),
@@ -39,15 +39,11 @@ fun ListContent(pokemonListItemEntities: LazyPagingItems<PokemonListItemEntity>,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         contentPadding = PaddingValues(12.dp)
     ) {
-        item(span = { GridItemSpan(this.maxLineSpan)}){
-            Text("Pokedex", style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 24.sp),
-                modifier = Modifier.padding(12.dp))
-        }
         items(pokemonListItemEntities.itemCount) { index ->
             pokemonListItemEntities[index]?.let { pokemon ->
                 PokemonItem(
                     pokemon = pokemon,
-                    modifier = Modifier.clickable {onItemClick(pokemon.id, pokemon.color) }
+                    modifier = Modifier.clickable {onItemClick(pokemon.id) }
                 )
             }
         }

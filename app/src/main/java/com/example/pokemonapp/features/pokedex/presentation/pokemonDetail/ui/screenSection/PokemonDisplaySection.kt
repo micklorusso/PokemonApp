@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,7 +33,9 @@ import java.util.Locale
 @Composable
 fun PokemonDisplaySection(modifier: Modifier, pokemonDetail: PokemonDetailEntity,
                           pokemonColor: Color, textColor: Color,
-                          onBackClick: () -> Unit) {
+                          onBackClick: () -> Unit,
+                          onHartClick: () -> Unit,
+                          isFavourite: Boolean) {
     Box(modifier = modifier.background(pokemonColor)) {
         Column {
             Row(
@@ -48,9 +51,11 @@ fun PokemonDisplaySection(modifier: Modifier, pokemonDetail: PokemonDetailEntity
                         tint = textColor
                     )
                 }
-                IconButton(onClick = {}) {
+                IconButton(onClick = {
+                    onHartClick()
+                }) {
                     Icon(
-                        imageVector = Icons.Default.FavoriteBorder,
+                        imageVector = if(isFavourite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                         contentDescription = "Favourite",
                         tint = textColor
                     )

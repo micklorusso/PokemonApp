@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.pokemonapp.features.auth.data.model.Favourite
 import com.example.pokemonapp.features.pokedex.presentation.pokemonDetail.ui.screenSection.PokemonDetailSection
 import com.example.pokemonapp.features.pokedex.presentation.pokemonDetail.ui.screenSection.PokemonDisplaySection
 import com.example.pokemonapp.features.pokedex.presentation.pokemonDetail.viewModel.PokemonDetailEvent
@@ -30,7 +31,6 @@ import com.example.pokemonapp.util.UtilityFunctions
 @Composable
 fun PokemonDetailScreen(
     id: Int,
-    color: String,
     navController: NavHostController,
     pokemonDetailViewModel: PokemonDetailViewModel = hiltViewModel()
 ) {
@@ -39,6 +39,7 @@ fun PokemonDetailScreen(
     }
 
     val state = pokemonDetailViewModel.state.collectAsState(initial = PokemonDetailState.Empty)
+    val isFavourite = pokemonDetailViewModel.isFavourite.collectAsState(false)
 
     when (state.value) {
         is PokemonDetailState.Loading -> {
@@ -59,15 +60,21 @@ fun PokemonDetailScreen(
             }
 
             val pokemonDetail = (state.value as PokemonDetailState.Success).pokemonDetailModel
-            val pokemonColor = UtilityFunctions.hexToColor(color)
+            val pokemonColor = UtilityFunctions.hexToColor(pokemonDetail.color)
             val textColor = UtilityFunctions.getTextColor(pokemonColor)
 
             Box(Modifier.fillMaxSize()) {
-                PokemonDisplaySection(modifier = Modifier.fillMaxSize(), pokemonDetail, pokemonColor, textColor) {
-                    pokemonDetailViewModel.onEvent(
-                        PokemonDetailEvent.OnBackClicked
-                    )
-                }
+                PokemonDisplaySection(modifier = Modifier.fillMaxSize(), pokemonDetail, pokemonColor, textColor,
+                    onBackClick = {
+                        pokemonDetailViewModel.onEvent(
+                            PokemonDetailEvent.OnBackClicked
+                        )
+                    },
+                    onHartClick = {
+                        pokemonDetailViewModel.onEvent(PokemonDetailEvent.OnHartClick(pokemonDetail))
+                    },
+                    isFavourite = isFavourite.value
+                )
                 PokemonDetailSection(
                     Modifier.fillMaxWidth().fillMaxHeight(0.5f)
                     .align(Alignment.BottomCenter)

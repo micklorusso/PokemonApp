@@ -1,0 +1,9 @@
+{
+  "projects": {
+    "default": "pokemonapp-94b44",
+    "staging": "pokemonapp-94b44"
+  },
+  "targets": {},
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
+}

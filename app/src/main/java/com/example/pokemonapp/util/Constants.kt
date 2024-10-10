@@ -20,4 +20,10 @@ object Constants {
         "white" to "#FFFFFF",
         "pink" to "#FFC0CB"
     )
+
+    const val LOCALHOST = "10.0.2.2"
+    const val AUTH_PORT = 9099
+    const val FIRESTORE_PORT = 8080
+    const val STORAGE_PORT = 9199
+    const val UNEXPECTED_CREDENTIAL = "Unexpected type of credential"
 }

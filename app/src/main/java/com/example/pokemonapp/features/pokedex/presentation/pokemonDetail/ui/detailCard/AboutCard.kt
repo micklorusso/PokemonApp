@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.pokemonapp.features.pokedex.domain.entities.PokemonDetailEntity
 
 @Composable
@@ -33,22 +34,27 @@ fun AboutCard(pokemonDetail: PokemonDetailEntity) {
         Text(
             "Breeding",
             Modifier.padding(vertical = 8.dp),
-            style = TextStyle(fontWeight = FontWeight.Bold)
+            style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 16.sp)
         )
-        Row(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Gender", modifier = Modifier.weight(1f))
-            Row(modifier = Modifier.weight(1f)) {
-                Icon(imageVector = Icons.Filled.Male, contentDescription = "Male")
-                Text(pokemonDetail.gender["male"].toString())
-            }
-            Row(modifier = Modifier.weight(1f)) {
-                Icon(imageVector = Icons.Filled.Female, contentDescription = "Female")
-                Text(pokemonDetail.gender["female"].toString())
-            }
-            AboutRow("Egg Groups", pokemonDetail.eggGroups.joinToString(", "))
+        if(pokemonDetail.gender == null){
+            AboutRow("Gender", "genderless")
         }
+        else {
+            Row(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Gender", modifier = Modifier.weight(1f))
+                Row(modifier = Modifier.weight(1f)) {
+                    Icon(imageVector = Icons.Filled.Male, contentDescription = "Male")
+                    Text(pokemonDetail.gender["male"].toString())
+                }
+                Row(modifier = Modifier.weight(1f)) {
+                    Icon(imageVector = Icons.Filled.Female, contentDescription = "Female")
+                    Text(pokemonDetail.gender["female"].toString())
+                }
+            }
+        }
+        AboutRow("Egg Groups", pokemonDetail.eggGroups.joinToString(", "))
     }
 }
 

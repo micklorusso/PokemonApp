@@ -10,12 +10,13 @@ data class PokemonDetailEntity (
     val name: String,
     val types: List<String>,
     val imageUrl: String,
+    val sprite: String,
     val color: String,
     val species: String,
     val height: String,
     val weight: String,
     val abilities: List<String>,
-    val gender: Map<String, Float>,
+    val gender: Map<String, Float>?,
     val eggGroups: List<String>,
     val stats: List<Stat>
 ){
@@ -38,8 +39,15 @@ data class PokemonDetailEntity (
             for(ability in pokemonDetailModel.abilities)
                 abilities.add(ability.ability.name)
 
-            val femalePercentage: Float = (pokemonSpeciesModel.genderRate.toFloat() / 8f) * 100f
-            val malePercentage: Float = 100f - femalePercentage
+            var gender: Map<String, Float>? = emptyMap()
+            if(pokemonSpeciesModel.genderRate == -1){
+                gender = null
+            }
+            else {
+                val femalePercentage: Float = (pokemonSpeciesModel.genderRate.toFloat() / 8f) * 100f
+                val malePercentage: Float = 100f - femalePercentage
+                gender =  mapOf("male" to malePercentage, "female" to femalePercentage)
+            }
 
             val eggGroups = mutableListOf<String>()
             for(eggGroup in pokemonSpeciesModel.eggGroups)
@@ -54,12 +62,13 @@ data class PokemonDetailEntity (
                 name = pokemonDetailModel.name,
                 types = types,
                 imageUrl = pokemonDetailModel.sprites.other.officialArtwork.frontDefault,
+                sprite = pokemonDetailModel.sprites.frontDefault,
                 color = POKEDEX_COLOR_MAP[pokemonSpeciesModel.color.name]?: "#FFFFFF",
                 species = species,
                 height = height,
                 weight = weight,
                 abilities = abilities,
-                gender = mapOf("male" to malePercentage, "female" to femalePercentage),
+                gender = gender,
                 eggGroups = eggGroups,
                 stats = stats
             )

@@ -21,6 +21,7 @@ import com.example.pokemonapp.features.pokedex.presentation.pokedex.ui.PokedexSc
 import com.example.pokemonapp.features.pokedex.presentation.pokedex.viewModel.PokedexViewModel
 import com.example.pokemonapp.features.pokedex.presentation.pokemonDetail.ui.PokemonDetailScreen
 import com.example.pokemonapp.features.pokedex.presentation.search.ui.SearchScreen
+import com.example.pokemonapp.features.pokedex.presentation.search.viewModel.SearchViewModel
 
 @ExperimentalPagingApi
 @Composable
@@ -30,6 +31,7 @@ fun SetupNavGraph(navController: NavHostController, navState: NavState, accountC
                   settingsViewModel: SettingsViewModel) {
     val pokedexViewModel = hiltViewModel<PokedexViewModel>()
     val favouriteViewModel = hiltViewModel<FavouriteViewModel>()
+    val searchViewModel = hiltViewModel<SearchViewModel>()
     NavHost(
         navController = navController,
         startDestination = Screen.SplashScreen.route
@@ -71,7 +73,7 @@ fun SetupNavGraph(navController: NavHostController, navState: NavState, accountC
             FavouriteScreen(navController, navState, favouriteViewModel)
         }
         composable(Screen.FilterScreen.route){
-            SearchScreen(navState, navController)
+            SearchScreen(navState, navController, searchViewModel)
         }
         composable(Screen.SettingsScreen.route){
             SettingsScreen(navState, settingsViewModel = settingsViewModel)

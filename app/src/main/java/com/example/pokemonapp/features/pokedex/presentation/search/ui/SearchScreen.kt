@@ -42,7 +42,7 @@ import com.example.pokemonapp.util.UiSingleTimeEvent
 fun SearchScreen(
     navState: NavState,
     navController: NavHostController,
-    searchViewModel: SearchViewModel = hiltViewModel()
+    searchViewModel: SearchViewModel
 ) {
     val filteredItems = searchViewModel.filteredItems.collectAsLazyPagingItems()
     val searchQuery by searchViewModel.searchQuery.collectAsState()

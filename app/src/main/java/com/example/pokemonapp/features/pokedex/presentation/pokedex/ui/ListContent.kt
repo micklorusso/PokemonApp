@@ -29,7 +29,7 @@ import com.example.pokemonapp.util.UtilityFunctions
 import java.util.Locale
 
 @Composable
-fun ListContent(pokemonListItemEntities: LazyPagingItems<PokemonListItemEntity>, modifier: Modifier,
+fun ListContent(pokemonListItemEntities: LazyPagingItems<PokemonListItemEntity>, modifier: Modifier = Modifier,
                 onItemClick: (Int) -> Unit) {
 
     LazyVerticalGrid(

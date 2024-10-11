@@ -5,4 +5,5 @@ sealed class PokedexEvent {
     data object OnProfileClick: PokedexEvent()
     data object OnSettingsClick: PokedexEvent()
     data object OnFavouritesClick: PokedexEvent()
+    data object OnFilterClick: PokedexEvent()
 }

@@ -36,6 +36,9 @@ class PokedexViewModel @Inject constructor(
             is PokedexEvent.OnSettingsClick -> {
 
             }
+            is PokedexEvent.OnFilterClick -> {
+                emitUiSingleTimeEvent(UiSingleTimeEvent.Navigate(Screen.FilterScreen.route), viewModelScope, _uiSingleTimeEvent)
+            }
 
             PokedexEvent.OnFavouritesClick -> {
                 emitUiSingleTimeEvent(UiSingleTimeEvent.Navigate(Screen.FavouriteScreen.route), viewModelScope, _uiSingleTimeEvent)

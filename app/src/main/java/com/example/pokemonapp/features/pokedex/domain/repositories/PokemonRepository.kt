@@ -4,6 +4,7 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.example.pokemonapp.features.pokedex.data.datasources.api.PokemonApi
 import com.example.pokemonapp.features.pokedex.data.datasources.localDatabase.PokemonDatabase
 import com.example.pokemonapp.features.pokedex.data.paging.PokemonRemoteMediator

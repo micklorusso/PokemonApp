@@ -18,6 +18,7 @@ import com.example.pokemonapp.features.pokedex.presentation.favourite.viewModel.
 import com.example.pokemonapp.features.pokedex.presentation.pokedex.ui.PokedexScreen
 import com.example.pokemonapp.features.pokedex.presentation.pokedex.viewModel.PokedexViewModel
 import com.example.pokemonapp.features.pokedex.presentation.pokemonDetail.ui.PokemonDetailScreen
+import com.example.pokemonapp.features.pokedex.presentation.search.ui.SearchScreen
 
 @ExperimentalPagingApi
 @Composable
@@ -65,6 +66,9 @@ fun SetupNavGraph(navController: NavHostController, navState: NavState, accountC
         }
         composable(Screen.FavouriteScreen.route){
             FavouriteScreen(navController, navState, favouriteViewModel)
+        }
+        composable(Screen.FilterScreen.route){
+            SearchScreen(navState, navController)
         }
 
     }

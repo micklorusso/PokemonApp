@@ -5,11 +5,17 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,6 +33,7 @@ import com.example.pokemonapp.features.pokedex.presentation.pokemonDetail.viewMo
 import com.example.pokemonapp.ui.commonViews.LoadingIndicator
 import com.example.pokemonapp.util.UiSingleTimeEvent
 import com.example.pokemonapp.util.UtilityFunctions
+import kotlinx.coroutines.launch
 
 @Composable
 fun PokemonDetailScreen(
@@ -40,6 +47,9 @@ fun PokemonDetailScreen(
 
     val state = pokemonDetailViewModel.state.collectAsState(initial = PokemonDetailState.Empty)
     val isFavourite = pokemonDetailViewModel.isFavourite.collectAsState(false)
+
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
 
     when (state.value) {
         is PokemonDetailState.Loading -> {
@@ -63,26 +73,41 @@ fun PokemonDetailScreen(
             val pokemonColor = UtilityFunctions.hexToColor(pokemonDetail.color)
             val textColor = UtilityFunctions.getTextColor(pokemonColor)
 
-            Box(Modifier.fillMaxSize()) {
-                PokemonDisplaySection(modifier = Modifier.fillMaxSize(), pokemonDetail, pokemonColor, textColor,
-                    onBackClick = {
-                        pokemonDetailViewModel.onEvent(
-                            PokemonDetailEvent.OnBackClicked
-                        )
-                    },
-                    onHartClick = {
-                        pokemonDetailViewModel.onEvent(PokemonDetailEvent.OnHartClick(pokemonDetail))
-                    },
-                    isFavourite = isFavourite.value
-                )
-                PokemonDetailSection(
-                    Modifier.fillMaxWidth().fillMaxHeight(0.5f)
-                    .align(Alignment.BottomCenter)
-                    .shadow(20.dp, RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
-                    .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
-                    .background(Color.White),
-                    pokemonDetail
-                )
+            Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) {padding ->
+                Box(Modifier.fillMaxSize().padding(padding)) {
+                    PokemonDisplaySection(
+                        modifier = Modifier.fillMaxSize(), pokemonDetail, pokemonColor, textColor,
+                        onBackClick = {
+                            pokemonDetailViewModel.onEvent(
+                                PokemonDetailEvent.OnBackClicked
+                            )
+                        },
+                        onHartClick = {
+                            pokemonDetailViewModel.onEvent(
+                                PokemonDetailEvent.OnHartClick(
+                                    pokemonDetail
+                                )
+                            )
+                            coroutineScope.launch {
+                                snackbarHostState.showSnackbar(
+                                    message = if (isFavourite.value) "Removed from favourites" else "Added to favourites",
+                                    actionLabel = "Dismiss"
+                                )
+                            }
+                        },
+                        isFavourite = isFavourite.value
+                    )
+                    PokemonDetailSection(
+                        Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight(0.5f)
+                            .align(Alignment.BottomCenter)
+                            .shadow(20.dp, RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
+                            .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
+                            .background(Color.White),
+                        pokemonDetail
+                    )
+                }
             }
         }
         else -> Unit

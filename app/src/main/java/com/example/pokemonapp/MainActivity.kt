@@ -11,9 +11,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.runtime.remember
 import androidx.core.content.FileProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import androidx.paging.ExperimentalPagingApi
 import com.example.pokemonapp.features.auth.presentation.account_center.AccountCenterViewModel
+import com.example.pokemonapp.features.auth.presentation.settings.viewModel.SettingsViewModel
 import com.example.pokemonapp.navigation.NavState
 import com.example.pokemonapp.navigation.SetupNavGraph
 import com.example.pokemonapp.ui.theme.PokemonAppTheme
@@ -34,6 +36,7 @@ import java.util.Locale
 @ExperimentalPagingApi
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    private val settingsViewModel: SettingsViewModel by viewModels()
     private val accountCenterViewModel: AccountCenterViewModel by viewModels()
 
     // Activity result launchers
@@ -52,14 +55,14 @@ class MainActivity : ComponentActivity() {
         initializeActivityResultLaunchers()
 
         setContent {
-            PokemonAppTheme {
+            PokemonAppTheme(darkTheme = settingsViewModel.isDarkThemeEnabled.value) {
                 val navController = rememberNavController()
                 val navState = remember(navController) {
                     NavState(navController)
                 }
                 SetupNavGraph(navController = navController, navState, accountCenterViewModel, onTakePhoto = {
                     takePicture()
-                }, onPickImage = { openImagePicker()})
+                }, onPickImage = { openImagePicker()}, settingsViewModel = settingsViewModel)
             }
         }
     }

@@ -34,13 +34,13 @@ fun HamburgerMenu(navigateToProfile: () -> Unit, navigateToSettings: () -> Unit,
                 navigateToProfile()
             })
 
-            DropdownMenuItem(text = { Text("Settings")},
-                onClick = {
-                expanded = false
-                navigateToSettings()
-            })
-
             if(!isAnonymous){
+                DropdownMenuItem(text = { Text("Settings")},
+                    onClick = {
+                        expanded = false
+                        navigateToSettings()
+                    })
+
                 DropdownMenuItem(text = { Text("Favourites")},
                     onClick = {
                         expanded = false

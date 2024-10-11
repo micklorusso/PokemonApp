@@ -10,6 +10,8 @@ import androidx.navigation.navArgument
 import androidx.paging.ExperimentalPagingApi
 import com.example.pokemonapp.features.auth.presentation.account_center.AccountCenterScreen
 import com.example.pokemonapp.features.auth.presentation.account_center.AccountCenterViewModel
+import com.example.pokemonapp.features.auth.presentation.settings.ui.SettingsScreen
+import com.example.pokemonapp.features.auth.presentation.settings.viewModel.SettingsViewModel
 import com.example.pokemonapp.features.auth.presentation.sign_in.SignInScreen
 import com.example.pokemonapp.features.auth.presentation.sign_up.SignUpScreen
 import com.example.pokemonapp.features.auth.presentation.splash.SplashScreen
@@ -24,7 +26,8 @@ import com.example.pokemonapp.features.pokedex.presentation.search.ui.SearchScre
 @Composable
 fun SetupNavGraph(navController: NavHostController, navState: NavState, accountCenterViewModel: AccountCenterViewModel,
                   onPickImage: () -> Unit,
-                  onTakePhoto: () -> Unit) {
+                  onTakePhoto: () -> Unit,
+                  settingsViewModel: SettingsViewModel) {
     val pokedexViewModel = hiltViewModel<PokedexViewModel>()
     val favouriteViewModel = hiltViewModel<FavouriteViewModel>()
     NavHost(
@@ -69,6 +72,9 @@ fun SetupNavGraph(navController: NavHostController, navState: NavState, accountC
         }
         composable(Screen.FilterScreen.route){
             SearchScreen(navState, navController)
+        }
+        composable(Screen.SettingsScreen.route){
+            SettingsScreen(navState, settingsViewModel = settingsViewModel)
         }
 
     }
